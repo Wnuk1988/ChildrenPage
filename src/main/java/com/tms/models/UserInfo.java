@@ -2,6 +2,8 @@ package com.tms.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
@@ -30,4 +32,7 @@ public class UserInfo {
     private String password;
     @Column(name = "email")
     private String email;
+    @Column(name = "user_role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

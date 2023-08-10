@@ -30,14 +30,18 @@ public class UserService {
 
     public void updateUser(UserInfo userInfo) {
         Optional<UserInfo> fromDb = getUserById(userInfo.getId());
-        UserInfo newUser = fromDb.get();
-        newUser.setFirstName(userInfo.getFirstName());
-        newUser.setLastName(userInfo.getLastName());
-        newUser.setLogin(userInfo.getLogin());
-        newUser.setPassword(userInfo.getPassword());
-        newUser.setEmail(userInfo.getEmail());
-        log.info("Update user {}", userInfo);
-        userRepository.save(newUser);
+        if (fromDb.isPresent()){
+            UserInfo newUser = fromDb.get();
+            newUser.setFirstName(userInfo.getFirstName());
+            newUser.setLastName(userInfo.getLastName());
+            newUser.setLogin(userInfo.getLogin());
+            newUser.setPassword(userInfo.getPassword());
+            newUser.setEmail(userInfo.getEmail());
+            log.info("Update user {}", userInfo);
+            userRepository.save(newUser);
+        }else {
+             fromDb.isEmpty();
+        }
     }
 
     public void deleteUserById(Integer id) {

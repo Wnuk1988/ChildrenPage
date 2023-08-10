@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
@@ -27,9 +28,10 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserInfo> getUser(@PathVariable Integer id) {
-        Optional<UserInfo> userInfo = userService.getUserById(id);
-        if (userInfo != null) {
-            return new ResponseEntity<>(HttpStatus.OK); // не возврощает обект
+        Optional<UserInfo> userInfoOptional = userService.getUserById(id);
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            return new ResponseEntity<>(userInfo, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -50,12 +52,15 @@ public class UserController {
     public ResponseEntity<HttpStatus> updateUser(@RequestBody UserInfo userInfo) {
         userService.updateUser(userInfo);
         Optional<UserInfo> userInfoUpdatedOptional = userService.getUserById(userInfo.getId());
-        UserInfo userInfoUpdated = userInfoUpdatedOptional.get();
-        if (userInfo.equals(userInfoUpdated)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        if (userInfoUpdatedOptional.isPresent()) {
+            UserInfo userInfoUpdated = userInfoUpdatedOptional.get();
+            if (userInfo.equals(userInfoUpdated)) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @DeleteMapping("{id}")
