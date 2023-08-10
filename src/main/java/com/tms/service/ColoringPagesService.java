@@ -1,5 +1,6 @@
 package com.tms.service;
 
+import com.tms.models.Categories;
 import com.tms.models.ColoringPages;
 import com.tms.repository.ColoringPagesRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class ColoringPagesService {
         return coloringPagesRepository.findAll();
     }
 
-    public List<ColoringPages> getColoringPagesByCategories(String category) {
+    public List<ColoringPages> getColoringPagesByCategories(Categories category) {
         return coloringPagesRepository.findByCategories(category);
     }
 
@@ -31,7 +32,7 @@ public class ColoringPagesService {
         Optional<ColoringPages> fromDb = getColoringPageById(coloringPage.getId());
         ColoringPages newColoringPage = fromDb.get();
         newColoringPage.setColoringPageName(coloringPage.getColoringPageName());
-        newColoringPage.setCategory(coloringPage.getCategory());
+      //  newColoringPage.setCategory(coloringPage.getCategory());
         newColoringPage.setPathToFile(coloringPage.getPathToFile());
         coloringPagesRepository.save(newColoringPage);
     }

@@ -27,6 +27,7 @@ public class FairyTalesController {
     public ResponseEntity<HttpStatus> upload(@RequestParam("file") MultipartFile file) {
         try {
             Files.copy(file.getInputStream(), this.ROOT_FILE_PATH.resolve(file.getOriginalFilename()));
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (IOException e) {
             System.out.println(e);

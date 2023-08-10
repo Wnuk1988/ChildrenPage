@@ -1,5 +1,6 @@
 package com.tms.controller;
 
+import com.tms.models.Categories;
 import com.tms.models.ColoringPages;
 import com.tms.service.ColoringPagesService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ColoringPagesController {
     }
 
     @GetMapping("/{category}")
-    public ResponseEntity<List<ColoringPages>> getColoringPagesByCategories(@PathVariable String category) {
+    public ResponseEntity<List<ColoringPages>> getColoringPagesByCategories(@RequestBody Categories category) {
         List<ColoringPages> coloringPages = coloringPagesService.getColoringPagesByCategories(category);
         if (coloringPages.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.OK); // как вернуть обект
