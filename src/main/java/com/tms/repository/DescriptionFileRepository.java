@@ -3,13 +3,12 @@ package com.tms.repository;
 import com.tms.models.Categories;
 import com.tms.models.DescriptionFile;
 import com.tms.models.Genre;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DescriptionFileRepository extends JpaRepository<DescriptionFile,Integer> {
@@ -19,8 +18,9 @@ public interface DescriptionFileRepository extends JpaRepository<DescriptionFile
 
     DescriptionFile findDescriptionFileByNameFile(String nameFile);
 
-//    @Modifying
-//    @Transactional
-//    @Query("delete from DescriptionFile id where DescriptionFile.id=:id")
-//    int deleteDescriptionFileById(Integer id);
+//    @Query(value = "from DescriptionFile where id = :id")
+//    Optional<DescriptionFile> findById(Integer id);
+
+//    @Query(value = "insert into description_file(path_to_file) VALUES (?)" )
+//     DescriptionFile creatPathToFile(String pathToFile);
 }

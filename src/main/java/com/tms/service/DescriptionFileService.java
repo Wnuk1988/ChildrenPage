@@ -17,6 +17,11 @@ import java.util.Optional;
 public class DescriptionFileService {
     private final DescriptionFileRepository descriptionFileRepository;
 
+//    public DescriptionFile createPathToFile(String pathToFile) {
+//        log.info("Saving new {}", pathToFile);
+//        return descriptionFileRepository.creatPathToFile(pathToFile);
+//    }
+
     public List<DescriptionFile> getFiles() {
         return descriptionFileRepository.findAll();
     }

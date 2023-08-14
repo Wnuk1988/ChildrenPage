@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -27,6 +31,18 @@ import java.util.Optional;
 public class DescriptionFileController {
     public final DescriptionFileService descriptionFileService;
     private final Path ROOT_FILE_PATH = Paths.get("data");
+
+//    @PostMapping("/upload")
+//    public ResponseEntity<HttpStatus> upload(@RequestParam("file") MultipartFile file,@PathVariable String pathToFile) {
+//        try {
+//            Files.copy(file.getInputStream(), this.ROOT_FILE_PATH.resolve(file.getOriginalFilename()));
+//            descriptionFileService.createPathToFile(pathToFile);
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        } catch (IOException e) {
+//            System.out.println(e);
+//        }
+//        return new ResponseEntity<>(HttpStatus.CONFLICT);
+//    }
 
     @GetMapping
     public ResponseEntity<List<DescriptionFile>> getFiles() {
