@@ -49,7 +49,7 @@ public class DescriptionFileController {
         }
     }
 
-    @GetMapping("/{nameFile}")
+    @GetMapping("/nameFile/{nameFile}")
     public ResponseEntity<DescriptionFile> getNameFile(@PathVariable String nameFile) {
         Optional<DescriptionFile> descriptionFileOptional = descriptionFileService.findDescriptionFileByNameFile(nameFile);
         if (descriptionFileOptional.isPresent()) {
@@ -60,7 +60,7 @@ public class DescriptionFileController {
         }
     }
 
-    @GetMapping("/{categories}")
+    @GetMapping("/categories/{categories}")
     public ResponseEntity<List<DescriptionFile>> getFileCategories(@PathVariable Categories categories) {
         List<DescriptionFile> fileList = descriptionFileService.getFileCategories(categories);
         if (fileList.isEmpty()) {
@@ -70,7 +70,7 @@ public class DescriptionFileController {
         }
     }
 
-    @GetMapping("/{genre}")
+    @GetMapping("/genre/{genre}")
     public ResponseEntity<List<DescriptionFile>> getFileCategory(@PathVariable Genre genre) {
         List<DescriptionFile> fileList = descriptionFileService.getFileGenre(genre);
         if (fileList.isEmpty()) {

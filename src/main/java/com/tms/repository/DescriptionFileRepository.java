@@ -19,8 +19,8 @@ public interface DescriptionFileRepository extends JpaRepository<DescriptionFile
 
     DescriptionFile findDescriptionFileByNameFile(String nameFile);
 
-    @Modifying
-    @Transactional
-    @Query("delete from DescriptionFile id where DescriptionFile.id=:id")
-    int deleteDescriptionFileById(Integer id);
+//    @Modifying
+//    @Transactional
+//    @Query("delete from DescriptionFile id where DescriptionFile.id=:id")
+//    int deleteDescriptionFileById(Integer id);
 }

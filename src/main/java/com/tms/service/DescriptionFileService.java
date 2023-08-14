@@ -15,31 +15,31 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class DescriptionFileService {
-    private final DescriptionFileRepository descriptionFileRepositoryRepository;
+    private final DescriptionFileRepository descriptionFileRepository;
 
     public List<DescriptionFile> getFiles() {
-        return descriptionFileRepositoryRepository.findAll();
+        return descriptionFileRepository.findAll();
     }
 
     public Optional<DescriptionFile> findDescriptionFileByNameFile(String nameFile) {
-        return Optional.ofNullable(descriptionFileRepositoryRepository.findDescriptionFileByNameFile(nameFile));
+        return Optional.ofNullable(descriptionFileRepository.findDescriptionFileByNameFile(nameFile));
     }
 
     public List<DescriptionFile> getFileCategories(Categories categories) {
-        return descriptionFileRepositoryRepository.findByCategories(categories);
+        return descriptionFileRepository.findByCategories(categories);
     }
 
     public List<DescriptionFile> getFileGenre(Genre genre) {
-        return descriptionFileRepositoryRepository.findByGenre(genre);
+        return descriptionFileRepository.findByGenre(genre);
     }
 
     public Optional<DescriptionFile> getFileById(Integer id) {
-        return descriptionFileRepositoryRepository.findById(id);
+        return descriptionFileRepository.findById(id);
     }
 
     public DescriptionFile createFile(DescriptionFile file) {
         log.info("Saving new {}", file);
-        return descriptionFileRepositoryRepository.save(file);
+        return descriptionFileRepository.save(file);
     }
 
     public void updateFile(DescriptionFile file) {
@@ -53,7 +53,7 @@ public class DescriptionFileService {
             newFile.setCategories(file.getCategories());
             newFile.setGenre(file.getGenre());
             log.info("Update file {}", file);
-            descriptionFileRepositoryRepository.save(newFile);
+            descriptionFileRepository.save(newFile);
         } else {
             fromDb.isEmpty();
         }
@@ -61,6 +61,6 @@ public class DescriptionFileService {
 
     public void deleteFile(Integer id) {
         log.info("Delete file {}", id);
-        descriptionFileRepositoryRepository.deleteById(id);
+        descriptionFileRepository.deleteById(id);
     }
 }
