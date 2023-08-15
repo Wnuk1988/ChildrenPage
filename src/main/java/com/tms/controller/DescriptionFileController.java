@@ -32,17 +32,18 @@ public class DescriptionFileController {
     public final DescriptionFileService descriptionFileService;
     private final Path ROOT_FILE_PATH = Paths.get("data");
 
-//    @PostMapping("/upload")
-//    public ResponseEntity<HttpStatus> upload(@RequestParam("file") MultipartFile file,@PathVariable String pathToFile) {
-//        try {
-//            Files.copy(file.getInputStream(), this.ROOT_FILE_PATH.resolve(file.getOriginalFilename()));
-//            descriptionFileService.createPathToFile(pathToFile);
-//            return new ResponseEntity<>(HttpStatus.CREATED);
-//        } catch (IOException e) {
-//            System.out.println(e);
-//        }
-//        return new ResponseEntity<>(HttpStatus.CONFLICT);
-//    }
+    @PostMapping("/upload")
+    public ResponseEntity<HttpStatus> upload(@RequestParam("file") MultipartFile file) {
+        try {
+            Path pathToFile = this.ROOT_FILE_PATH.resolve(file.getOriginalFilename());
+            Files.copy(file.getInputStream(), pathToFile);
+            descriptionFileService.createPathToFile(String.valueOf(pathToFile));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
 
     @GetMapping
     public ResponseEntity<List<DescriptionFile>> getFiles() {

@@ -17,11 +17,24 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/favorites")
-    public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody DescriptionFile descriptionFile) {
-        DescriptionFile favoritesFile = userService.addFavoritesFile(descriptionFile);
-        if (favoritesFile!=null) {
+    @PostMapping("/favorites/{userId},{fileId}")
+    public ResponseEntity<HttpStatus> addFavoritesFile(@PathVariable Integer userId, @PathVariable Integer fileId) {
+        Optional<UserInfo> userInfoUpdated = userService.getUserById(userId);
+        userService.addFavoritesFile(userId, fileId);
+        Optional<UserInfo> userInfo = userService.getUserById(userId);
+        if (userInfo.isEmpty() && userInfoUpdated.isPresent()) {
             return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @DeleteMapping("/favorites/{favoritesFile}")
+    public ResponseEntity<HttpStatus> deleteByFavoritesFile(@PathVariable List<DescriptionFile> favoritesFile) {
+        userService.deleteByFavoritesFile(favoritesFile);
+        boolean descriptionFileDelete = favoritesFile.isEmpty();
+        if (descriptionFileDelete) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }

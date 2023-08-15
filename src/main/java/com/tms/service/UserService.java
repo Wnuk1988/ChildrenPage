@@ -16,9 +16,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public DescriptionFile addFavoritesFile(DescriptionFile descriptionFile) {
-        userRepository.addFavoritesFile(descriptionFile);
-        return descriptionFile;
+    public void addFavoritesFile(Integer userId, Integer fileId) {
+        userRepository.addFileToUser(userId, fileId);
+    }
+
+    public void deleteByFavoritesFile(List<DescriptionFile> favoritesFile) {
+        log.info("Delete favoritesFile {}", favoritesFile);
+        userRepository.deleteByFavoritesFile(favoritesFile);
     }
 
     public List<UserInfo> getUsers() {
@@ -36,7 +40,7 @@ public class UserService {
 
     public void updateUser(UserInfo userInfo) {
         Optional<UserInfo> fromDb = getUserById(userInfo.getId());
-        if (fromDb.isPresent()){
+        if (fromDb.isPresent()) {
             UserInfo newUser = fromDb.get();
             newUser.setFirstName(userInfo.getFirstName());
             newUser.setLastName(userInfo.getLastName());
@@ -45,8 +49,8 @@ public class UserService {
             newUser.setEmail(userInfo.getEmail());
             log.info("Update user {}", userInfo);
             userRepository.save(newUser);
-        }else {
-             fromDb.isEmpty();
+        } else {
+            fromDb.isEmpty();
         }
     }
 
