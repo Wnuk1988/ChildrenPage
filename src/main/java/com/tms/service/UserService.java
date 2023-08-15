@@ -1,5 +1,6 @@
 package com.tms.service;
 
+import com.tms.models.DescriptionFile;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
+    public DescriptionFile addFavoritesFile(DescriptionFile descriptionFile) {
+        userRepository.addFavoritesFile(descriptionFile);
+        return descriptionFile;
+    }
 
     public List<UserInfo> getUsers() {
         return userRepository.findAll();

@@ -1,5 +1,6 @@
 package com.tms.controller;
 
+import com.tms.models.DescriptionFile;
 import com.tms.models.UserInfo;
 import com.tms.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,16 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+
+    @PostMapping("/favorites")
+    public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody DescriptionFile descriptionFile) {
+        DescriptionFile favoritesFile = userService.addFavoritesFile(descriptionFile);
+        if (favoritesFile!=null) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
 
     @GetMapping
     public ResponseEntity<List<UserInfo>> getUsers() {

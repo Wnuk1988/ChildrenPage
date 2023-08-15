@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -44,7 +43,7 @@ public class UserInfo {
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name="L_user_file",
             joinColumns=  @JoinColumn(name="user_info_id", referencedColumnName="id"),
             inverseJoinColumns= @JoinColumn(name="description_file_id", referencedColumnName="id") )
