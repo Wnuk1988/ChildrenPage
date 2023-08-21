@@ -1,5 +1,6 @@
 package com.tms.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"userInfoList"})
+@ToString(exclude = {"userInfoList"})
 @Entity
 @Table(name = "description_file")
 public class DescriptionFile {
@@ -44,7 +45,8 @@ public class DescriptionFile {
     @Column(name = "genre")
     @Enumerated(EnumType.STRING)
     private Genre genre;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="L_user_file",
             joinColumns=  @JoinColumn(name="description_file_id", referencedColumnName="id"),
             inverseJoinColumns= @JoinColumn(name="user_info_id", referencedColumnName="id") )

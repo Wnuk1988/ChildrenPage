@@ -2,6 +2,7 @@ package com.tms.controller;
 
 import com.tms.models.DescriptionFile;
 import com.tms.models.UserInfo;
+import com.tms.request.RequestParametersId;
 import com.tms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,24 +18,24 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/favorites/{userId},{fileId}")
-    public ResponseEntity<HttpStatus> addFavoritesFile(@PathVariable Integer userId, @PathVariable Integer fileId) {
-        Optional<UserInfo> userInfoUpdated = userService.getUserById(userId);
-        userService.addFavoritesFile(userId, fileId);
-        Optional<UserInfo> userInfo = userService.getUserById(userId);
-        if (userInfo.isEmpty() && userInfoUpdated.isPresent()) {
+    @PostMapping
+    public ResponseEntity<HttpStatus> createUser(@RequestBody UserInfo userInfo) {
+        UserInfo userInfoSaved = userService.createUser(userInfo);
+        Optional<UserInfo> userInfoResult = userService.getUserById(userInfoSaved.getId());
+        if (userInfoResult.isPresent()) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
-    @DeleteMapping("/favorites/{favoritesFile}")
-    public ResponseEntity<HttpStatus> deleteByFavoritesFile(@PathVariable List<DescriptionFile> favoritesFile) {
-        userService.deleteByFavoritesFile(favoritesFile);
-        boolean descriptionFileDelete = favoritesFile.isEmpty();
-        if (descriptionFileDelete) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PostMapping("/favorites")
+    public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
+        Optional<Integer> userInfoId = Optional.ofNullable(requestParametersId.getUserId());
+        Optional<Integer> fileId = Optional.ofNullable(requestParametersId.getFileId());
+        userService.addFavoritesFile(requestParametersId);
+        if (userInfoId.isPresent() && fileId.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -61,17 +62,6 @@ public class UserController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody UserInfo userInfo) {
-        UserInfo userInfoSaved = userService.createUser(userInfo);
-        Optional<UserInfo> userInfoResult = userService.getUserById(userInfoSaved.getId());
-        if (userInfoResult.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-    }
-
     @PutMapping
     public ResponseEntity<HttpStatus> updateUser(@RequestBody UserInfo userInfo) {
         userService.updateUser(userInfo);
@@ -93,6 +83,17 @@ public class UserController {
         userService.deleteUserById(id);
         Optional<UserInfo> userInfo = userService.getUserById(id);
         if (userInfo.isEmpty() && userInfoUpdated.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @DeleteMapping("/favorites/{favoritesFile}")
+    public ResponseEntity<HttpStatus> deleteByFavoritesFile(@PathVariable List<DescriptionFile> favoritesFile) {
+        userService.deleteByFavoritesFile(favoritesFile);
+        boolean descriptionFileDelete = favoritesFile.isEmpty();
+        if (descriptionFileDelete) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);

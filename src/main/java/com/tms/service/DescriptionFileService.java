@@ -17,6 +17,11 @@ import java.util.Optional;
 public class DescriptionFileService {
     private final DescriptionFileRepository descriptionFileRepository;
 
+    public DescriptionFile createFile(DescriptionFile file) {
+        log.info("Saving new {}", file);
+        return descriptionFileRepository.save(file);
+    }
+
     public void createPathToFile(String pathToFile) {
         log.info("Saving new {}", pathToFile);
         descriptionFileRepository.creatPathToFile(pathToFile);
@@ -26,8 +31,8 @@ public class DescriptionFileService {
         return descriptionFileRepository.findAll();
     }
 
-    public Optional<DescriptionFile> findDescriptionFileByNameFile(String nameFile) {
-        return Optional.ofNullable(descriptionFileRepository.findDescriptionFileByNameFile(nameFile));
+    public Optional<DescriptionFile> getFileById(Integer id) {
+        return descriptionFileRepository.findById(id);
     }
 
     public List<DescriptionFile> getFileCategories(Categories categories) {
@@ -36,15 +41,6 @@ public class DescriptionFileService {
 
     public List<DescriptionFile> getFileGenre(Genre genre) {
         return descriptionFileRepository.findByGenre(genre);
-    }
-
-    public Optional<DescriptionFile> getFileById(Integer id) {
-        return descriptionFileRepository.findById(id);
-    }
-
-    public DescriptionFile createFile(DescriptionFile file) {
-        log.info("Saving new {}", file);
-        return descriptionFileRepository.save(file);
     }
 
     public void updateFile(DescriptionFile file) {
@@ -64,8 +60,8 @@ public class DescriptionFileService {
         }
     }
 
-    public void deleteFile(Integer id) {
-        log.info("Delete file {}", id);
-        descriptionFileRepository.deleteById(id);
+    public void deleteFile(String nameFile) {
+        log.info("Delete file {}", nameFile);
+        descriptionFileRepository.deleteByNameFile(nameFile);
     }
 }

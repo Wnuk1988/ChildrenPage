@@ -9,5 +9,4 @@ public class ChildrenPageApplication {
     public static void main(String[] args) {
         SpringApplication.run(ChildrenPageApplication.class, args);
     }
-
 }

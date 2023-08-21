@@ -13,9 +13,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +21,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"favoritesFile"})
+@ToString(exclude = {"favoritesFile"})
 @Entity
 @Table(name = "user_info")
 public class UserInfo {
@@ -43,7 +43,7 @@ public class UserInfo {
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="L_user_file",
             joinColumns=  @JoinColumn(name="user_info_id", referencedColumnName="id"),
             inverseJoinColumns= @JoinColumn(name="description_file_id", referencedColumnName="id") )

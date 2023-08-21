@@ -9,21 +9,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface DescriptionFileRepository extends JpaRepository<DescriptionFile, Integer> {
-    List<DescriptionFile> findByCategories(Categories categories);
-
-    List<DescriptionFile> findByGenre(Genre genre);
-
-    DescriptionFile findDescriptionFileByNameFile(String nameFile);
-
-    @Modifying
-    @Query(nativeQuery = true, value = "from DescriptionFile where id = :id")
-    Optional<DescriptionFile> findById(Integer id);
 
     @Modifying
     @Query(nativeQuery = true, value = "insert into description_file(path_to_file) VALUES (?)")
     void creatPathToFile(String pathToFile);
+
+    List<DescriptionFile> findByCategories(Categories categories);
+
+    List<DescriptionFile> findByGenre(Genre genre);
+
+    void deleteByNameFile(String nameFile);
 }

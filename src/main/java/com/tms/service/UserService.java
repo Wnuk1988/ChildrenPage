@@ -3,6 +3,7 @@ package com.tms.service;
 import com.tms.models.DescriptionFile;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
+import com.tms.request.RequestParametersId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,14 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public void addFavoritesFile(Integer userId, Integer fileId) {
-        userRepository.addFileToUser(userId, fileId);
+    public UserInfo createUser(UserInfo userInfo) {
+        log.info("Saving new {}", userInfo);
+        return userRepository.save(userInfo);
     }
 
-    public void deleteByFavoritesFile(List<DescriptionFile> favoritesFile) {
-        log.info("Delete favoritesFile {}", favoritesFile);
-        userRepository.deleteByFavoritesFile(favoritesFile);
+    public void addFavoritesFile(RequestParametersId requestParametersId) {
+        log.info("Saving new favorites file {}", requestParametersId);
+        userRepository.addFileToUser(requestParametersId);
     }
 
     public List<UserInfo> getUsers() {
@@ -31,11 +33,6 @@ public class UserService {
 
     public Optional<UserInfo> getUserById(Integer id) {
         return userRepository.findById(id);
-    }
-
-    public UserInfo createUser(UserInfo userInfo) {
-        log.info("Saving new {}", userInfo);
-        return userRepository.save(userInfo);
     }
 
     public void updateUser(UserInfo userInfo) {
@@ -57,5 +54,10 @@ public class UserService {
     public void deleteUserById(Integer id) {
         log.info("Delete user {}", id);
         userRepository.deleteById(id);
+    }
+
+    public void deleteByFavoritesFile(List<DescriptionFile> favoritesFile) {
+        log.info("Delete favorites file {}", favoritesFile);
+        userRepository.deleteByFavoritesFile(favoritesFile);
     }
 }
