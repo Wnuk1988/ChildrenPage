@@ -1,11 +1,11 @@
-package com.tms.request;
+package com.tms.models.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class RequestParametersId {
     private Integer userId;

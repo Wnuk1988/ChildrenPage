@@ -14,12 +14,12 @@ import java.util.List;
 public interface DescriptionFileRepository extends JpaRepository<DescriptionFile, Integer> {
 
     @Modifying
-    @Query(nativeQuery = true, value = "insert into description_file(path_to_file) VALUES (?)")
+    @Query(nativeQuery = true, value = "INSERT INTO description_file (path_to_file) VALUES (:pathToFile)")
     void creatPathToFile(String pathToFile);
 
     List<DescriptionFile> findByCategories(Categories categories);
 
     List<DescriptionFile> findByGenre(Genre genre);
 
-    void deleteByNameFile(String nameFile);
+    void deleteById(Integer id);
 }

@@ -1,8 +1,9 @@
 package com.tms.controller;
 
-import com.tms.models.DescriptionFile;
+import com.tms.exception.UserInfoNotFoundException;
+import com.tms.models.Role;
 import com.tms.models.UserInfo;
-import com.tms.request.RequestParametersId;
+import com.tms.models.request.RequestParametersId;
 import com.tms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,36 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-
-    @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody UserInfo userInfo) {
-        UserInfo userInfoSaved = userService.createUser(userInfo);
-        Optional<UserInfo> userInfoResult = userService.getUserById(userInfoSaved.getId());
-        if (userInfoResult.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-    }
-
-    @PostMapping("/favorites")
-    public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
-        Optional<Integer> userInfoId = Optional.ofNullable(requestParametersId.getUserId());
-        Optional<Integer> fileId = Optional.ofNullable(requestParametersId.getFileId());
-        userService.addFavoritesFile(requestParametersId);
-        if (userInfoId.isPresent() && fileId.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-    }
 
     @GetMapping
     public ResponseEntity<List<UserInfo>> getUsers() {
@@ -51,52 +28,50 @@ public class UserController {
         }
     }
 
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<UserInfo>> getUsersByRole(@PathVariable String role) {
+        List<UserInfo> users = userService.findAllByRole(Role.valueOf(role));
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserInfo> getUser(@PathVariable Integer id) {
-        Optional<UserInfo> userInfoOptional = userService.getUserById(id);
-        if (userInfoOptional.isPresent()) {
-            UserInfo userInfo = userInfoOptional.get();
-            return new ResponseEntity<>(userInfo, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        UserInfo userInfo = userService.getUserById(id).orElseThrow(UserInfoNotFoundException::new);
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<HttpStatus> createUser(@RequestBody UserInfo userInfo) {
+        userService.createUser(userInfo);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    //TODO: 500 ошибку выдает
+    @PostMapping("/favorites")
+    public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
+        userService.addFavoritesFile(requestParametersId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<HttpStatus> updateUser(@RequestBody UserInfo userInfo) {
         userService.updateUser(userInfo);
-        Optional<UserInfo> userInfoUpdatedOptional = userService.getUserById(userInfo.getId());
-        if (userInfoUpdatedOptional.isPresent()) {
-            UserInfo userInfoUpdated = userInfoUpdatedOptional.get();
-            if (userInfo.equals(userInfoUpdated)) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id) {
-        Optional<UserInfo> userInfoUpdated = userService.getUserById(id);
         userService.deleteUserById(id);
-        Optional<UserInfo> userInfo = userService.getUserById(id);
-        if (userInfo.isEmpty() && userInfoUpdated.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @DeleteMapping("/favorites/{favoritesFile}")
-    public ResponseEntity<HttpStatus> deleteByFavoritesFile(@PathVariable List<DescriptionFile> favoritesFile) {
-        userService.deleteByFavoritesFile(favoritesFile);
-        boolean descriptionFileDelete = favoritesFile.isEmpty();
-        if (descriptionFileDelete) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+    //TODO: 500 ошибку выдает
+    @DeleteMapping("/favorites")
+    public ResponseEntity<HttpStatus> deleteByFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
+        userService.deleteByFavoritesFile(requestParametersId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

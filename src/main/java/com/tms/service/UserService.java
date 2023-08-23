@@ -1,9 +1,9 @@
 package com.tms.service;
 
-import com.tms.models.DescriptionFile;
+import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
-import com.tms.request.RequestParametersId;
+import com.tms.models.request.RequestParametersId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,6 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserInfo createUser(UserInfo userInfo) {
-        log.info("Saving new {}", userInfo);
-        return userRepository.save(userInfo);
-    }
-
-    public void addFavoritesFile(RequestParametersId requestParametersId) {
-        log.info("Saving new favorites file {}", requestParametersId);
-        userRepository.addFileToUser(requestParametersId);
-    }
-
     public List<UserInfo> getUsers() {
         return userRepository.findAll();
     }
@@ -35,20 +25,23 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public List<UserInfo> findAllByRole(Role role) {
+        return userRepository.findAllByRole(role);
+    }
+
+    public void createUser(UserInfo userInfo) {
+        log.info("Saving new {}", userInfo);
+        userRepository.save(userInfo);
+    }
+
+    public void addFavoritesFile(RequestParametersId requestParametersId) {
+        log.info("Saving new favorites file {}", requestParametersId);
+        userRepository.addFileToUser(requestParametersId.getUserId(), requestParametersId.getFileId());
+    }
+
     public void updateUser(UserInfo userInfo) {
-        Optional<UserInfo> fromDb = getUserById(userInfo.getId());
-        if (fromDb.isPresent()) {
-            UserInfo newUser = fromDb.get();
-            newUser.setFirstName(userInfo.getFirstName());
-            newUser.setLastName(userInfo.getLastName());
-            newUser.setLogin(userInfo.getLogin());
-            newUser.setPassword(userInfo.getPassword());
-            newUser.setEmail(userInfo.getEmail());
-            log.info("Update user {}", userInfo);
-            userRepository.save(newUser);
-        } else {
-            fromDb.isEmpty();
-        }
+        log.info("Update user {}", userInfo);
+        userRepository.saveAndFlush(userInfo);
     }
 
     public void deleteUserById(Integer id) {
@@ -56,8 +49,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void deleteByFavoritesFile(List<DescriptionFile> favoritesFile) {
-        log.info("Delete favorites file {}", favoritesFile);
-        userRepository.deleteByFavoritesFile(favoritesFile);
+    public void deleteByFavoritesFile(RequestParametersId requestParametersId) {
+        log.info("Delete favorites file {}", requestParametersId);
+        userRepository.deleteByFavoritesFile(requestParametersId.getUserId(), requestParametersId.getFileId());
     }
 }
