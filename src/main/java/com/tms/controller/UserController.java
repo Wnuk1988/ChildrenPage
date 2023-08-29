@@ -1,14 +1,20 @@
 package com.tms.controller;
 
 import com.tms.exception.UserInfoNotFoundException;
-import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.models.request.RequestParametersId;
 import com.tms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,16 +27,6 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserInfo>> getUsers() {
         List<UserInfo> users = userService.getUsers();
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        }
-    }
-
-    @GetMapping("/role/{role}")
-    public ResponseEntity<List<UserInfo>> getUsersByRole(@PathVariable String role) {
-        List<UserInfo> users = userService.findAllByRole(Role.valueOf(role));
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

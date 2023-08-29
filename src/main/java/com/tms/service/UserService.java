@@ -1,6 +1,5 @@
 package com.tms.service;
 
-import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
 import com.tms.models.request.RequestParametersId;
@@ -23,10 +22,6 @@ public class UserService {
 
     public Optional<UserInfo> getUserById(Integer id) {
         return userRepository.findById(id);
-    }
-
-    public List<UserInfo> findAllByRole(Role role) {
-        return userRepository.findAllByRole(role);
     }
 
     public void createUser(UserInfo userInfo) {

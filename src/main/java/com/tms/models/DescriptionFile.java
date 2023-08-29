@@ -9,12 +9,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +44,10 @@ public class DescriptionFile {
     @Column(name = "categories")
     @Enumerated(EnumType.STRING)
     private Categories categories;
-    @Column(name = "genre")
+    @Column(name = "genres")
     @Enumerated(EnumType.STRING)
-    private Genre genre;
+    private Genres genres;
     @JsonBackReference
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name="L_user_file",
-            joinColumns=  @JoinColumn(name="description_file_id", referencedColumnName="id"),
-            inverseJoinColumns= @JoinColumn(name="user_info_id", referencedColumnName="id") )
+    @ManyToMany(mappedBy = "favoritesFile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserInfo> userInfoList = new ArrayList<>();
 }

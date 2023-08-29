@@ -3,8 +3,6 @@ package com.tms.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -13,7 +11,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +36,12 @@ public class UserInfo {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "login")
-    private String login;
-    @Column(name = "password")
-    private String password;
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
     @Column(name = "email")
     private String email;
-    @Column(name = "user_role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name="L_user_file",
+    @JoinTable(name="l_user_file",
             joinColumns=  @JoinColumn(name="user_info_id", referencedColumnName="id"),
             inverseJoinColumns= @JoinColumn(name="description_file_id", referencedColumnName="id") )
     private List<DescriptionFile> favoritesFile = new ArrayList<>();

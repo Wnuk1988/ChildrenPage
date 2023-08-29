@@ -2,8 +2,7 @@ package com.tms.service;
 
 import com.tms.models.Categories;
 import com.tms.models.DescriptionFile;
-import com.tms.models.Genre;
-import com.tms.models.request.RequestIdAndFilename;
+import com.tms.models.Genres;
 import com.tms.repository.DescriptionFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,38 +17,33 @@ import java.util.Optional;
 public class DescriptionFileService {
     private final DescriptionFileRepository descriptionFileRepository;
 
-    public List<DescriptionFile> getFiles() {
+    public List<DescriptionFile> getDescriptionFiles() {
         return descriptionFileRepository.findAll();
     }
 
-    public List<DescriptionFile> getFileCategories(Categories categories) {
+    public List<DescriptionFile> getDescriptionFilesCategories(Categories categories) {
         return descriptionFileRepository.findByCategories(categories);
     }
 
-    public List<DescriptionFile> getFileGenre(Genre genre) {
-        return descriptionFileRepository.findByGenre(genre);
+    public List<DescriptionFile> getDescriptionFilesGenres(Genres genres) {
+        return descriptionFileRepository.findByGenres(genres);
     }
 
-    public Optional<DescriptionFile> getFileById(Integer id) {
+    public Optional<DescriptionFile> getDescriptionFileById(Integer id) {
         return descriptionFileRepository.findById(id);
     }
 
-    public void createFile(DescriptionFile file) {
-        log.info("Saving new {}", file);
-        descriptionFileRepository.save(file);
+    public void createDescriptionFile(DescriptionFile descriptionFile) {
+        log.info("Saving new {}", descriptionFile);
+        descriptionFileRepository.save(descriptionFile);
     }
 
-    public void createPathToFile(String pathToFile) {
-        log.info("Saving path to file {}", pathToFile);
-        descriptionFileRepository.creatPathToFile(pathToFile);
+    public void updateDescriptionFile(DescriptionFile descriptionFile) {
+        log.info("Update file {}", descriptionFile);
+        descriptionFileRepository.saveAndFlush(descriptionFile);
     }
 
-    public void updateFile(DescriptionFile file) {
-        log.info("Update file {}", file);
-        descriptionFileRepository.saveAndFlush(file);
-    }
-
-    public void deleteFileId(Integer id){
+    public void deleteDescriptionFileId(Integer id){
         log.info("Delete file {}", id);
         descriptionFileRepository.deleteById(id);
     }

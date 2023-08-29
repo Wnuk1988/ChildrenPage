@@ -3,7 +3,7 @@ package com.tms.controller;
 import com.tms.exception.DescriptionFileNotFoundException;
 import com.tms.models.Categories;
 import com.tms.models.DescriptionFile;
-import com.tms.models.Genre;
+import com.tms.models.Genres;
 import com.tms.models.request.RequestIdAndFilename;
 import com.tms.service.DescriptionFileService;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +41,8 @@ public class DescriptionFileController {
     private final Path ROOT_FILE_PATH = Paths.get("data");
 
     @GetMapping
-    public ResponseEntity<List<DescriptionFile>> getFiles() {
-        List<DescriptionFile> fileList = descriptionFileService.getFiles();
+    public ResponseEntity<List<DescriptionFile>> getDescriptionFiles() {
+        List<DescriptionFile> fileList = descriptionFileService.getDescriptionFiles();
         if (fileList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -68,14 +68,14 @@ public class DescriptionFileController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DescriptionFile> getFile(@PathVariable Integer id) {
-        DescriptionFile descriptionFile = descriptionFileService.getFileById(id).orElseThrow(DescriptionFileNotFoundException::new);
+    public ResponseEntity<DescriptionFile> getDescriptionFile(@PathVariable Integer id) {
+        DescriptionFile descriptionFile = descriptionFileService.getDescriptionFileById(id).orElseThrow(DescriptionFileNotFoundException::new);
         return new ResponseEntity<>(descriptionFile, HttpStatus.OK);
     }
 
     @GetMapping("/categories/{categories}")
-    public ResponseEntity<List<DescriptionFile>> getFileCategories(@PathVariable Categories categories) {
-        List<DescriptionFile> fileList = descriptionFileService.getFileCategories(categories);
+    public ResponseEntity<List<DescriptionFile>> getDescriptionFilesCategories(@PathVariable Categories categories) {
+        List<DescriptionFile> fileList = descriptionFileService.getDescriptionFilesCategories(categories);
         if (fileList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -83,9 +83,9 @@ public class DescriptionFileController {
         }
     }
 
-    @GetMapping("/genre/{genre}")
-    public ResponseEntity<List<DescriptionFile>> getFileCategory(@PathVariable Genre genre) {
-        List<DescriptionFile> fileList = descriptionFileService.getFileGenre(genre);
+    @GetMapping("/genres/{genres}")
+    public ResponseEntity<List<DescriptionFile>> getDescriptionFilesGenres(@PathVariable Genres genres) {
+        List<DescriptionFile> fileList = descriptionFileService.getDescriptionFilesGenres(genres);
         if (fileList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -93,15 +93,11 @@ public class DescriptionFileController {
         }
     }
 
-    //TODO: как добавить файл и описание в тело запроса в POSTMAN?
     @PostMapping()
-    public ResponseEntity<HttpStatus> createFile(@RequestParam("file") MultipartFile file,
-                                                 @RequestBody DescriptionFile descriptionFile) {
+    public ResponseEntity<HttpStatus> createFile(@RequestParam("file") MultipartFile file) {
         try {
             Path pathToFile = this.ROOT_FILE_PATH.resolve(Objects.requireNonNull(file.getOriginalFilename()));
             Files.copy(file.getInputStream(), pathToFile);
-            descriptionFileService.createPathToFile(String.valueOf(pathToFile));
-            descriptionFileService.createFile(descriptionFile);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e);
@@ -109,19 +105,25 @@ public class DescriptionFileController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
+    @PostMapping("/description")
+    public ResponseEntity<HttpStatus> createDescriptionFile(@RequestBody DescriptionFile descriptionFile) {
+        descriptionFileService.createDescriptionFile(descriptionFile);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @PutMapping
-    public ResponseEntity<HttpStatus> updateFile(@RequestBody DescriptionFile file) {
-        descriptionFileService.updateFile(file);
+    public ResponseEntity<HttpStatus> updateDescriptionFile(@RequestBody DescriptionFile descriptionFile) {
+        descriptionFileService.updateDescriptionFile(descriptionFile);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping()
-    public ResponseEntity<HttpStatus> deleteFile(@RequestBody RequestIdAndFilename requestIdAndFilename) {
+    public ResponseEntity<HttpStatus> deleteAllFile(@RequestBody RequestIdAndFilename requestIdAndFilename) {
         Path path = ROOT_FILE_PATH.resolve(requestIdAndFilename.getFileName());
         File file = new File(path.toString());
-        Optional<DescriptionFile> descriptionFile = descriptionFileService.getFileById(requestIdAndFilename.getFileId());
-        descriptionFileService.deleteFileId(requestIdAndFilename.getFileId());
-        Optional<DescriptionFile> descriptionFileDelete = descriptionFileService.getFileById(requestIdAndFilename.getFileId());
+        Optional<DescriptionFile> descriptionFile = descriptionFileService.getDescriptionFileById(requestIdAndFilename.getFileId());
+        descriptionFileService.deleteDescriptionFileId(requestIdAndFilename.getFileId());
+        Optional<DescriptionFile> descriptionFileDelete = descriptionFileService.getDescriptionFileById(requestIdAndFilename.getFileId());
         if (file.delete() && descriptionFileDelete.isEmpty() && descriptionFile.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
