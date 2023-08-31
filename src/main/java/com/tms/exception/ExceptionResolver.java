@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 @ControllerAdvice
 public class ExceptionResolver {
+    @ExceptionHandler(value = SecurityCredentialsUnauthorizedException.class)
+    public ResponseEntity<HttpStatus> securityCredentialsUnauthorized() {
+        log.info("Missing valid credentials!");
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(value = DescriptionFileNotFoundException.class)
     public ResponseEntity<HttpStatus> descriptionFileNotFoundException() {

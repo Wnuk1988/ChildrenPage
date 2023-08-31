@@ -12,17 +12,17 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "site_security")
-public class SiteSecurity {
+@Table(name = "security_credentials")
+public class SecurityCredentials {
     @Id
-    @SequenceGenerator(name = "mySeqGen", sequenceName = "site_security_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "mySeqGen", sequenceName = "security_credentials_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "mySeqGen")
     private Integer id;
-    @Column(name = "login")
-    private String login;
-    @Column(name = "password")
-    private String password;
+    @Column(name = "user_login")
+    private String userLogin;
+    @Column(name = "user_password")
+    private String userPassword;
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role userRole;
 }
