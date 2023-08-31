@@ -1,10 +1,12 @@
-package com.tms.repository;
+package com.tms.security.repository;
 
-import com.tms.models.SecurityCredentials;
+import com.tms.security.domain.SecurityCredentials;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface SecurityCredentialsRepository extends JpaRepository<SecurityCredentials, Integer> {
-    SecurityCredentials findByUserLogin(String login);
+    Optional<SecurityCredentials> findByUserLogin(String login);
 }

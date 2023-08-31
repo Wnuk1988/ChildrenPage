@@ -1,13 +1,15 @@
 package com.tms.security;
 
 import com.tms.exception.SecurityCredentialsUnauthorizedException;
-import com.tms.models.SecurityCredentials;
-import com.tms.repository.SecurityCredentialsRepository;
+import com.tms.security.domain.SecurityCredentials;
+import com.tms.security.repository.SecurityCredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -16,14 +18,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws SecurityCredentialsUnauthorizedException {
-        SecurityCredentials securityCredentials = securityCredentialsRepository.findByUserLogin(username);
-        if (securityCredentials == null) {
+        Optional<SecurityCredentials> securityCredentials = securityCredentialsRepository.findByUserLogin(username);
+        if (securityCredentials.isEmpty()) {
             throw new SecurityCredentialsUnauthorizedException();
         }
         return User
-                .withUsername(securityCredentials.getUserLogin())
-                .password(securityCredentials.getUserPassword())
-                .roles(securityCredentials.getUserRole().toString())
+                .withUsername(securityCredentials.get().getUserLogin())
+                .password(securityCredentials.get().getUserPassword())
+                .roles(securityCredentials.get().getUserRole().toString())
                 .build();
     }
 }
