@@ -46,7 +46,6 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //TODO: 500 ошибку выдает
     @PostMapping("/favorites")
     public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
         userService.addFavoritesFile(requestParametersId);
@@ -64,7 +63,7 @@ public class UserController {
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    //TODO: 500 ошибку выдает
+
     @DeleteMapping("/favorites")
     public ResponseEntity<HttpStatus> deleteByFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
         userService.deleteByFavoritesFile(requestParametersId);
