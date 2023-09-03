@@ -4,6 +4,7 @@ import com.tms.exception.UserInfoNotFoundException;
 import com.tms.models.UserInfo;
 import com.tms.models.request.RequestParametersId;
 import com.tms.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
     private final UserService userService;
 

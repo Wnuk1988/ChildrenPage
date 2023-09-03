@@ -11,18 +11,16 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode(exclude = {"favoritesFile"})
 @ToString(exclude = {"favoritesFile"})
 @Entity
