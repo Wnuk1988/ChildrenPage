@@ -30,7 +30,7 @@ public class JwtUtils {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJwt(token);
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return true;
         } catch (SignatureException e) {
             log.info("Invalid JWT signature: " + e);
@@ -54,7 +54,7 @@ public class JwtUtils {
 
     public String getLoginFromJwt(String token) {
         try {
-            return Jwts.parser().setSigningKey(secret).parseClaimsJwt(token).getBody().getSubject();
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
         } catch (Exception e) {
             log.info("Can't take login from jwt: " + e);
         }
