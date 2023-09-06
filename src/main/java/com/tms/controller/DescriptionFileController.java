@@ -5,13 +5,20 @@ import com.tms.models.Categories;
 import com.tms.models.DescriptionFile;
 import com.tms.models.Genres;
 import com.tms.models.request.RequestIdAndFilename;
+import com.tms.models.request.RequestPagination;
+import com.tms.repository.PaginationDescriptionFileRepository;
 import com.tms.service.DescriptionFileService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +39,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/file")
+@SecurityRequirement(name = "Bearer Authentication")
 public class DescriptionFileController {
-    public final DescriptionFileService descriptionFileService;
+    private final DescriptionFileService descriptionFileService;
+    public final PaginationDescriptionFileRepository paginationDescriptionFileRepository;
     private final Path ROOT_FILE_PATH = Paths.get("data");
 
     @GetMapping
@@ -47,6 +55,16 @@ public class DescriptionFileController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(fileList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<DescriptionFile>> getPaginationDescriptionFiles(@Valid @RequestBody RequestPagination requestPagination) {
+        Page<DescriptionFile> filePage = paginationDescriptionFileRepository.findAll(PageRequest.of(requestPagination.getOffset(), requestPagination.getLimit()));
+        if (filePage.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(filePage, HttpStatus.OK);
         }
     }
 

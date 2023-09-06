@@ -1,6 +1,5 @@
 package com.tms.service;
 
-import com.tms.exception.SecurityCredentialsForbiddenException;
 import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
@@ -20,7 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final SecurityCredentials securityCredentials;
     private final SecurityCredentialsRepository securityCredentialsRepository;
 
     public List<UserInfo> getUsers() {
