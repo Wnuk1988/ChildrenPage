@@ -36,16 +36,19 @@ public class SecurityService {
 
     @Transactional(rollbackFor = Exception.class)
     public void registration(RegistrationDTO registrationDTO) {
-        userInfo.setFirstName(registrationDTO.getFirstName());
-        userInfo.setLastName(registrationDTO.getLastName());
-        userInfo.setDateOfBirth(registrationDTO.getDateOfBirth());
-        userInfo.setEmail(registrationDTO.getEmail());
-        UserInfo userInfoResult =  userRepository.save(userInfo);
+        Optional<SecurityCredentials> result = securityCredentialsRepository.findByUserLogin(registrationDTO.getUserLogin());
+        if (result.isEmpty()) {
+            userInfo.setFirstName(registrationDTO.getFirstName());
+            userInfo.setLastName(registrationDTO.getLastName());
+            userInfo.setDateOfBirth(registrationDTO.getDateOfBirth());
+            userInfo.setEmail(registrationDTO.getEmail());
+            UserInfo userInfoResult = userRepository.save(userInfo);
 
-        securityCredentials.setUserLogin(registrationDTO.getUserLogin());
-        securityCredentials.setUserPassword(passwordEncoder.encode(registrationDTO.getUserPassword()));
-        securityCredentials.setUserRole(Role.USER);
-        securityCredentials.setUserId(userInfoResult.getId());
-        securityCredentialsRepository.save(securityCredentials);
+            securityCredentials.setUserLogin(registrationDTO.getUserLogin());
+            securityCredentials.setUserPassword(passwordEncoder.encode(registrationDTO.getUserPassword()));
+            securityCredentials.setUserRole(Role.USER);
+            securityCredentials.setUserId(userInfoResult.getId());
+            securityCredentialsRepository.save(securityCredentials);
+        }
     }
 }

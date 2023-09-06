@@ -1,10 +1,15 @@
 package com.tms.service;
 
+import com.tms.exception.SecurityCredentialsForbiddenException;
+import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
 import com.tms.models.request.RequestParametersId;
+import com.tms.security.domain.SecurityCredentials;
+import com.tms.security.repository.SecurityCredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,13 +20,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final SecurityCredentials securityCredentials;
+    private final SecurityCredentialsRepository securityCredentialsRepository;
 
     public List<UserInfo> getUsers() {
         return userRepository.findAll();
     }
 
     public Optional<UserInfo> getUserById(Integer id) {
-        return userRepository.findById(id);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<SecurityCredentials> securityCredentialsOptional = securityCredentialsRepository.findByUserLogin(login);
+        if (securityCredentialsOptional.isPresent()){
+            SecurityCredentials securityCredentials = securityCredentialsOptional.get();
+            if (id.equals(securityCredentials.getUserId()) || (securityCredentials.getUserRole() == Role.ADMIN)){
+                return userRepository.findById(id);
+            }
+        }
+        return Optional.empty();
     }
 
     public void createUser(UserInfo userInfo) {

@@ -44,7 +44,7 @@ public class SpringSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(HttpMethod.GET, "/user").hasAnyRole("USER")
+                                .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER")
                                 .requestMatchers(HttpMethod.POST, "/authentication").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/registration").permitAll()
                                 .anyRequest().authenticated())

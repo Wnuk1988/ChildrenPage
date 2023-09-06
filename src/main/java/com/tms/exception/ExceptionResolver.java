@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 @ControllerAdvice
 public class ExceptionResolver {
+    @ExceptionHandler(value = SecurityCredentialsForbiddenException.class)
+    public ResponseEntity<HttpStatus> securityCredentialsForbiddenException() {
+        log.info("Limited or no access to data!");
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(value = SecurityCredentialsUnauthorizedException.class)
     public ResponseEntity<HttpStatus> securityCredentialsUnauthorized() {
         log.info("Missing valid credentials!");
