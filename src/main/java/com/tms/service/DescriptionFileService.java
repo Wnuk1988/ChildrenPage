@@ -6,6 +6,8 @@ import com.tms.models.Genres;
 import com.tms.repository.DescriptionFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public class DescriptionFileService {
 
     public List<DescriptionFile> getDescriptionFiles() {
         return descriptionFileRepository.findAll();
+    }
+
+    public Page<DescriptionFile> getPaginationDescriptionFiles(Pageable pageable) {
+        return descriptionFileRepository.findAll(pageable);
     }
 
     public List<DescriptionFile> getDescriptionFilesCategories(Categories categories) {
