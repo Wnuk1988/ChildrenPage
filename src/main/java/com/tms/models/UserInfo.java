@@ -1,5 +1,6 @@
 package com.tms.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@Schema(description = "Описание пользователя")
 @Component
 @Data
 @EqualsAndHashCode(exclude = {"favoritesFile"})

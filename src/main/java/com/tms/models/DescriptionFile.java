@@ -1,6 +1,7 @@
 package com.tms.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +20,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
+@Schema(description = "Описание файла")
 @Data
 @EqualsAndHashCode(exclude = {"userInfoList"})
 @ToString(exclude = {"userInfoList"})

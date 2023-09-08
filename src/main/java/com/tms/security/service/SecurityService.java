@@ -1,5 +1,7 @@
 package com.tms.security.service;
 
+import com.tms.exception.SecurityCredentialsForbiddenException;
+import com.tms.exception.SecurityCredentialsUnauthorizedException;
 import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
@@ -49,6 +51,8 @@ public class SecurityService {
             securityCredentials.setUserRole(Role.USER);
             securityCredentials.setUserId(userInfoResult.getId());
             securityCredentialsRepository.save(securityCredentials);
+        }else {
+            throw new SecurityCredentialsForbiddenException();
         }
     }
 }
