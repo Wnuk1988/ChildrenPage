@@ -20,12 +20,12 @@ public class SecurityController {
 
     private final SecurityService securityService;
 
-    @Operation(summary = "Регистрация пользователя", description = "Мы регистрируем пользователя, на вход нужно предать json RegistrationDTO")
+    @Operation(summary = "User registration", description = "We are registering a user, we need to provide json RegistrationDTO for login")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Мы успешно создали пользователя"),
-            @ApiResponse(responseCode = "409", description = "Не получилось создать пользователя"),
-            @ApiResponse(responseCode = "400", description = "Ошибка со стороны клиента"),
-            @ApiResponse(responseCode = "500", description = "Ошибка на сервере"),
+            @ApiResponse(responseCode = "201", description = "We have successfully created a user"),
+            @ApiResponse(responseCode = "409", description = "Failed to create user"),
+            @ApiResponse(responseCode = "400", description = "Client side error"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
     })
     @PostMapping("/registration")
     public ResponseEntity<HttpStatus> registration(@RequestBody RegistrationDTO registrationDTO){
@@ -33,7 +33,7 @@ public class SecurityController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Аутентификация пользователя", description = "Мы проверяем аутентификацию пользователя, на вход нужно предать json AuthRequest")
+    @Operation(summary = "User authentication", description = "We check user authentication, we need to pass json AuthRequest to the input")
     @PostMapping("/authentication")
     public ResponseEntity<AuthResponse> generateToken(@RequestBody AuthRequest authRequest) {
         String token = securityService.generateToken(authRequest);

@@ -3,7 +3,7 @@ package com.tms.security.domain;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@Schema(description = "Регистрация пользователя (DTO)")
+@Schema(description = "User registration (DTO)")
 @Data
 public class RegistrationDTO {
     private String firstName;

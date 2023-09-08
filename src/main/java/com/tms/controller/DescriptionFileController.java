@@ -46,7 +46,7 @@ public class DescriptionFileController {
     private final DescriptionFileService descriptionFileService;
     private final Path ROOT_FILE_PATH = Paths.get("data");
 
-    @Operation(summary = "Получаем описание всех файлов")
+    @Operation(summary = "We get a description of all files")
     @GetMapping
     public ResponseEntity<List<DescriptionFile>> getDescriptionFiles() {
         List<DescriptionFile> fileList = descriptionFileService.getDescriptionFiles();
@@ -57,7 +57,7 @@ public class DescriptionFileController {
         }
     }
 
-    @Operation(summary = "Получаем описание файлов пагинацией", description = "Мы получаем описание файлов пагинацией, на вход нужно предать json RequestPagination")
+    @Operation(summary = "We get file descriptions by pagination", description = "We receive file descriptions by pagination, we need to pass json RequestPagination to the input")
     @GetMapping("/pagination")
     public ResponseEntity<Page<DescriptionFile>> getPaginationDescriptionFiles(@Valid @RequestBody RequestPagination requestPagination) {
         Page<DescriptionFile> filePage = descriptionFileService.getPaginationDescriptionFiles(PageRequest.of(requestPagination.getOffset(),
@@ -69,7 +69,7 @@ public class DescriptionFileController {
         }
     }
 
-    @Operation(summary = "Получаем файл", description = "Мы получаем файл, на вход нужно предать=filename")
+    @Operation(summary = "We receive the file", description = "We receive a file, we need to provide the file name as input")
     @GetMapping("/filename/{filename}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         Path path = ROOT_FILE_PATH.resolve(filename);
@@ -87,14 +87,14 @@ public class DescriptionFileController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @Operation(summary = "Получаем описание файла", description = "Мы получаем описание файла, на вход нужно предать его id")
+    @Operation(summary = "Getting a file description", description = "We receive a description of the file, we need to provide its id as input")
     @GetMapping("/{id}")
     public ResponseEntity<DescriptionFile> getDescriptionFile(@PathVariable Integer id) {
         DescriptionFile descriptionFile = descriptionFileService.getDescriptionFileById(id).orElseThrow(DescriptionFileNotFoundException::new);
         return new ResponseEntity<>(descriptionFile, HttpStatus.OK);
     }
 
-    @Operation(summary = "Получаем описание файлов по категории", description = "Мы получаем описание файлов по категории, на вход нужно предать=categories ")
+    @Operation(summary = "We get a description of files by category", description = "We receive a description of files by category, we need to provide a category as input")
     @GetMapping("/categories/{categories}")
     public ResponseEntity<List<DescriptionFile>> getDescriptionFilesCategories(@PathVariable Categories categories) {
         List<DescriptionFile> fileList = descriptionFileService.getDescriptionFilesCategories(categories);
@@ -105,7 +105,7 @@ public class DescriptionFileController {
         }
     }
 
-    @Operation(summary = "Получаем описание файлов по жанру", description = "Мы получаем описание файлов по жанру, на вход нужно предать=genres ")
+    @Operation(summary = "We get a description of files by genre", description = "We get a description of the files by genre, you need to send the genre as input")
     @GetMapping("/genres/{genres}")
     public ResponseEntity<List<DescriptionFile>> getDescriptionFilesGenres(@PathVariable Genres genres) {
         List<DescriptionFile> fileList = descriptionFileService.getDescriptionFilesGenres(genres);
@@ -116,7 +116,7 @@ public class DescriptionFileController {
         }
     }
 
-    @Operation(summary = "Добавляем файл", description = "Мы добавляем файл, на вход нужно предать key=file и value=(название файла + формат)")
+    @Operation(summary = "Adding a file", description = "We are adding a file, the file itself must be submitted as input")
     @PostMapping()
     public ResponseEntity<HttpStatus> createFile(@RequestParam("file") MultipartFile file) {
         try {
@@ -129,21 +129,21 @@ public class DescriptionFileController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @Operation(summary = "Добавляем описание файла", description = "Мы добавляем описание файла, на вход нужно предать json DescriptionFile")
+    @Operation(summary = "Adding a file description", description = "We add a file description, we need to pass json DescriptionFile as input")
     @PostMapping("/description")
     public ResponseEntity<HttpStatus> createDescriptionFile(@RequestBody DescriptionFile descriptionFile) {
         descriptionFileService.createDescriptionFile(descriptionFile);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Изменяем описание файла", description = "Мы изменяем описание файла, на вход нужно предать json DescriptionFile")
+    @Operation(summary = "Changing the file description", description = "We are changing the file description, we need to pass json DescriptionFile as input")
     @PutMapping
     public ResponseEntity<HttpStatus> updateDescriptionFile(@RequestBody DescriptionFile descriptionFile) {
         descriptionFileService.updateDescriptionFile(descriptionFile);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "Удаление всего файла", description = "Мы удаляем весь файл, на вход нужно предать json RequestIdAndFilename")
+    @Operation(summary = "Deleting the entire file", description = "We delete the entire file, we need to provide json RequestIdAndFilename as input")
     @DeleteMapping()
     public ResponseEntity<HttpStatus> deleteAllFile(@RequestBody RequestIdAndFilename requestIdAndFilename) {
         Path path = ROOT_FILE_PATH.resolve(requestIdAndFilename.getFileName());

@@ -20,7 +20,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(description = "Описание файла")
+@Schema(description = "File Description")
 @Data
 @EqualsAndHashCode(exclude = {"userInfoList"})
 @ToString(exclude = {"userInfoList"})

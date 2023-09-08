@@ -27,7 +27,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "Получаем информацию обо всех пользователях")
+    @Operation(summary = "We receive information about all users")
     @GetMapping
     public ResponseEntity<List<UserInfo>> getUsers() {
         List<UserInfo> users = userService.getUsers();
@@ -38,42 +38,42 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Получаем информацию об пользователе", description = "Мы получаем информацию об пользователе, на вход нужно предать его id")
+    @Operation(summary = "Getting information about the user", description = "We receive information about the user, we need to provide his id for input")
     @GetMapping("/{id}")
     public ResponseEntity<UserInfo> getUser(@PathVariable Integer id) {
         UserInfo userInfo = userService.getUserById(id).orElseThrow(UserInfoNotFoundException::new);
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
-    @Operation(summary = "Добавляем пользователя", description = "Мы добавляем пользователя, на вход нужно предать json UserInfo")
+    @Operation(summary = "Adding a user", description = "We are adding a user, we need to pass json UserInfo to the input")
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@RequestBody UserInfo userInfo) {
         userService.createUser(userInfo);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Добавляем файл в избранное пользователя", description = "Мы добавляем файл, на вход нужно предать json RequestParametersId")
+    @Operation(summary = "Adding a file to the user's favorites", description = "We are adding a file, we need to provide json RequestParametersId as input")
     @PostMapping("/favorites")
     public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
         userService.addFavoritesFile(requestParametersId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Изменяем пользователя", description = "Мы изменяем пользователя, на вход нужно предать json UserInfo")
+    @Operation(summary = "Changing the user", description = "We are changing the user, we need to pass json UserInfo to the input")
     @PutMapping
     public ResponseEntity<HttpStatus> updateUser(@RequestBody UserInfo userInfo) {
         userService.updateUser(userInfo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "Удаляем пользователя", description = "Мы удаляем пользователя, на вход нужно предать его id")
+    @Operation(summary = "Deleting a user", description = "We are deleting a user, we need to provide his id at the login")
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id) {
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "Удаляем файл из избранного пользователя", description = "Мы добавляем файл, на вход нужно предать json RequestParametersId")
+    @Operation(summary = "Removing a file from a favorite user", description = "We are adding a file, we need to provide json RequestParametersId as input")
     @DeleteMapping("/favorites")
     public ResponseEntity<HttpStatus> deleteByFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
         userService.deleteByFavoritesFile(requestParametersId);

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 @SecurityScheme(
         name = "Bearer Authentication",
@@ -46,9 +47,9 @@ public class SpringSecurityConfiguration {
                         auth
                                 .requestMatchers(HttpMethod.POST, "/authentication").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/registration").permitAll()
+                                .requestMatchers(RegexRequestMatcher.regexMatcher("/user/[0-9]+")).hasAnyRole("USER","ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/user/{id}").hasAnyRole("USER")
-                                .requestMatchers(HttpMethod.POST, "/user/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST, "/user/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/user/**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.DELETE, "/user/**").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.GET, "/file/**").hasAnyRole("ADMIN","USER")

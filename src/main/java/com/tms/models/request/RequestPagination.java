@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Schema(description = "Для вывода описания файлов пагинацией")
+@Schema(description = "To display file descriptions by pagination")
 @Component
 @Data
 @NoArgsConstructor

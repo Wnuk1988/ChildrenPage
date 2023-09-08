@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(description = "Описание пользователя")
+@Schema(description = "User Description")
 @Component
 @Data
 @EqualsAndHashCode(exclude = {"favoritesFile"})
