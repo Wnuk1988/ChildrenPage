@@ -8,6 +8,8 @@ import com.tms.models.request.RequestIdAndFilename;
 import com.tms.models.request.RequestPagination;
 import com.tms.service.DescriptionFileService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +49,11 @@ public class DescriptionFileController {
     private final Path ROOT_FILE_PATH = Paths.get("data");
 
     @Operation(summary = "We get a description of all files")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to get a list of files"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping
     public ResponseEntity<List<DescriptionFile>> getDescriptionFiles() {
         List<DescriptionFile> fileList = descriptionFileService.getDescriptionFiles();
@@ -58,6 +65,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "We get file descriptions by pagination", description = "We receive file descriptions by pagination, we need to pass json RequestPagination to the input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to obtain a list of files by pagination"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping("/pagination")
     public ResponseEntity<Page<DescriptionFile>> getPaginationDescriptionFiles(@Valid @RequestBody RequestPagination requestPagination) {
         Page<DescriptionFile> filePage = descriptionFileService.getPaginationDescriptionFiles(PageRequest.of(requestPagination.getOffset(),
@@ -70,6 +82,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "We receive the file", description = "We receive a file, we need to provide the file name as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to get file"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping("/filename/{filename}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         Path path = ROOT_FILE_PATH.resolve(filename);
@@ -88,6 +105,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "Getting a file description", description = "We receive a description of the file, we need to provide its id as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to get file"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping("/{id}")
     public ResponseEntity<DescriptionFile> getDescriptionFile(@PathVariable Integer id) {
         DescriptionFile descriptionFile = descriptionFileService.getDescriptionFileById(id).orElseThrow(DescriptionFileNotFoundException::new);
@@ -95,6 +117,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "We get a description of files by category", description = "We receive a description of files by category, we need to provide a category as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to receive a file by category"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping("/categories/{categories}")
     public ResponseEntity<List<DescriptionFile>> getDescriptionFilesCategories(@PathVariable Categories categories) {
         List<DescriptionFile> fileList = descriptionFileService.getDescriptionFilesCategories(categories);
@@ -106,6 +133,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "We get a description of files by genre", description = "We get a description of the files by genre, you need to send the genre as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to receive a file by genre"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping("/genres/{genres}")
     public ResponseEntity<List<DescriptionFile>> getDescriptionFilesGenres(@PathVariable Genres genres) {
         List<DescriptionFile> fileList = descriptionFileService.getDescriptionFilesGenres(genres);
@@ -117,6 +149,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "Adding a file", description = "We are adding a file, the file itself must be submitted as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Request completed successfully, a new file was created"),
+            @ApiResponse(responseCode = "409", description = "The request could not be completed due to a conflicting resource access"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @PostMapping()
     public ResponseEntity<HttpStatus> createFile(@RequestParam("file") MultipartFile file) {
         try {
@@ -130,6 +167,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "Adding a file description", description = "We add a file description, we need to pass json DescriptionFile as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Request completed successfully, file description created"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @PostMapping("/description")
     public ResponseEntity<HttpStatus> createDescriptionFile(@RequestBody DescriptionFile descriptionFile) {
         descriptionFileService.createDescriptionFile(descriptionFile);
@@ -137,6 +179,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "Changing the file description", description = "We are changing the file description, we need to pass json DescriptionFile as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Request processed successfully, file modified"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @PutMapping
     public ResponseEntity<HttpStatus> updateDescriptionFile(@RequestBody DescriptionFile descriptionFile) {
         descriptionFileService.updateDescriptionFile(descriptionFile);
@@ -144,6 +191,11 @@ public class DescriptionFileController {
     }
 
     @Operation(summary = "Deleting the entire file", description = "We delete the entire file, we need to provide json RequestIdAndFilename as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Request processed successfully, entire file deleted"),
+            @ApiResponse(responseCode = "409", description = "The request could not be completed due to a conflicting resource access"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @DeleteMapping()
     public ResponseEntity<HttpStatus> deleteAllFile(@RequestBody RequestIdAndFilename requestIdAndFilename) {
         Path path = ROOT_FILE_PATH.resolve(requestIdAndFilename.getFileName());

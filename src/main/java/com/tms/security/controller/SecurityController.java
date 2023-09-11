@@ -34,6 +34,11 @@ public class SecurityController {
     }
 
     @Operation(summary = "User authentication", description = "We check user authentication, we need to pass json AuthRequest to the input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authentication was successful"),
+            @ApiResponse(responseCode = "401", description = "Failed to authenticate user"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @PostMapping("/authentication")
     public ResponseEntity<AuthResponse> generateToken(@RequestBody AuthRequest authRequest) {
         String token = securityService.generateToken(authRequest);

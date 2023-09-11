@@ -10,7 +10,6 @@ import com.tms.security.domain.SecurityCredentials;
 import com.tms.security.repository.SecurityCredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

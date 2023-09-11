@@ -5,6 +5,8 @@ import com.tms.models.UserInfo;
 import com.tms.models.request.RequestParametersId;
 import com.tms.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,12 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "We receive information about all users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to obtain a list of users"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping
     public ResponseEntity<List<UserInfo>> getUsers() {
         List<UserInfo> users = userService.getUsers();
@@ -39,6 +47,12 @@ public class UserController {
     }
 
     @Operation(summary = "Getting information about the user", description = "We receive information about the user, we need to provide his id for input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to obtain user data"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UserInfo> getUser(@PathVariable Integer id) {
         UserInfo userInfo = userService.getUserById(id).orElseThrow(UserInfoNotFoundException::new);
@@ -46,6 +60,12 @@ public class UserController {
     }
 
     @Operation(summary = "Adding a user", description = "We are adding a user, we need to pass json UserInfo to the input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "We have successfully created a user"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "409", description = "Failed to create user"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@RequestBody UserInfo userInfo) {
         userService.createUser(userInfo);
@@ -53,6 +73,11 @@ public class UserController {
     }
 
     @Operation(summary = "Adding a file to the user's favorites", description = "We are adding a file, we need to provide json RequestParametersId as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "You have successfully added favorites"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @PostMapping("/favorites")
     public ResponseEntity<HttpStatus> addFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
         userService.addFavoritesFile(requestParametersId);
@@ -60,6 +85,11 @@ public class UserController {
     }
 
     @Operation(summary = "Changing the user", description = "We are changing the user, we need to pass json UserInfo to the input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Your request has been successfully processed"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @PutMapping
     public ResponseEntity<HttpStatus> updateUser(@RequestBody UserInfo userInfo) {
         userService.updateUser(userInfo);
@@ -67,6 +97,11 @@ public class UserController {
     }
 
     @Operation(summary = "Deleting a user", description = "We are deleting a user, we need to provide his id at the login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id) {
         userService.deleteUserById(id);
@@ -74,6 +109,11 @@ public class UserController {
     }
 
     @Operation(summary = "Removing a file from a favorite user", description = "We are adding a file, we need to provide json RequestParametersId as input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Favorite file deleted successfully"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
     @DeleteMapping("/favorites")
     public ResponseEntity<HttpStatus> deleteByFavoritesFile(@RequestBody RequestParametersId requestParametersId) {
         userService.deleteByFavoritesFile(requestParametersId);
