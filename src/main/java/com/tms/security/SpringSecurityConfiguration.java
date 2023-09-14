@@ -23,8 +23,8 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
         bearerFormat = "JWT",
         scheme = "bearer"
 )
-@RequiredArgsConstructor
 @Configuration
+@RequiredArgsConstructor
 public class SpringSecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

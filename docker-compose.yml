@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  children-page:
+    container_name: children-page
+    image: wnuk1988/childrenpage:v2
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  db:
+    container_name: db
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=root
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
