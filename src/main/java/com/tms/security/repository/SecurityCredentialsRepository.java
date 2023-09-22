@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface SecurityCredentialsRepository extends JpaRepository<SecurityCredentials, Integer> {
     Optional<SecurityCredentials> findByUserLogin(String login);
+    SecurityCredentials findByActivationCode(String code);
+    Optional<SecurityCredentials> findByUserEmail(String email);
 }

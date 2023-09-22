@@ -47,6 +47,9 @@ public class SpringSecurityConfiguration {
                         auth
                                 .requestMatchers(HttpMethod.POST, "/authentication").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/registration").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/update").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(RegexRequestMatcher.regexMatcher("/email/[A-Za-z0-9]+")).hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(RegexRequestMatcher.regexMatcher("/activate/[A-Za-z0-9]+")).hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(RegexRequestMatcher.regexMatcher("/user/[0-9]+")).hasAnyRole("USER","ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/user/**").hasAnyRole("ADMIN")

@@ -25,6 +25,12 @@ public class SecurityCredentials {
     private String userLogin;
     @Column(name = "user_password")
     private String userPassword;
+    @Column(name = "user_email")
+    private String userEmail;
+    @Column(name = "activation_code")
+    private String activationCode;
+    @Column(name = "active")
+    private boolean active;
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private Role userRole;

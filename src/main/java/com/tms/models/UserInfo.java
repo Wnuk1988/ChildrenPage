@@ -38,8 +38,6 @@ public class UserInfo {
     private String lastName;
     @Column(name = "date_of_birth")
     private String dateOfBirth;
-    @Column(name = "email")
-    private String email;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="l_user_file",
             joinColumns=  @JoinColumn(name="user_info_id", referencedColumnName="id"),

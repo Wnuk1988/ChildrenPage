@@ -1,32 +1,41 @@
 package com.tms.security.service;
 
 import com.tms.exception.SecurityCredentialsForbiddenException;
-import com.tms.exception.SecurityCredentialsUnauthorizedException;
 import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
 import com.tms.security.domain.RegistrationDTO;
+import com.tms.security.domain.SecurityChangeRequest;
 import com.tms.security.domain.SecurityCredentials;
 import com.tms.security.repository.SecurityCredentialsRepository;
 import com.tms.security.JwtUtils;
 import com.tms.security.domain.AuthRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SecurityService {
 
+//    @Value("${spring.artemis.broker-url}")
+//    private String url;
     private final PasswordEncoder passwordEncoder;
     private final SecurityCredentialsRepository securityCredentialsRepository;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final UserInfo userInfo;
     private final SecurityCredentials securityCredentials;
+    private final MailSender mailSender;
 
     public String generateToken(AuthRequest authRequest) {
         Optional<SecurityCredentials> credentials = securityCredentialsRepository.findByUserLogin(authRequest.getLogin());
@@ -43,16 +52,77 @@ public class SecurityService {
             userInfo.setFirstName(registrationDTO.getFirstName());
             userInfo.setLastName(registrationDTO.getLastName());
             userInfo.setDateOfBirth(registrationDTO.getDateOfBirth());
-            userInfo.setEmail(registrationDTO.getEmail());
             UserInfo userInfoResult = userRepository.save(userInfo);
 
             securityCredentials.setUserLogin(registrationDTO.getUserLogin());
             securityCredentials.setUserPassword(passwordEncoder.encode(registrationDTO.getUserPassword()));
             securityCredentials.setUserRole(Role.USER);
             securityCredentials.setUserId(userInfoResult.getId());
+            securityCredentials.setUserEmail(registrationDTO.getEmail());
+            securityCredentials.setActive(false);
+            securityCredentials.setActivationCode(UUID.randomUUID().toString());
+            log.info("Saving new {}", registrationDTO);
             securityCredentialsRepository.save(securityCredentials);
-        }else {
-            throw new SecurityCredentialsForbiddenException();
+        } else {
+            throw new IllegalArgumentException();
         }
+    }
+
+    public void updateSecurityCredentials(SecurityChangeRequest securityChangeRequest) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<SecurityCredentials> securityCredentialsOptional = securityCredentialsRepository.findByUserLogin(login);
+        if (securityCredentialsOptional.isPresent()) {
+            SecurityCredentials securityDb = securityCredentialsOptional.get();
+            if (login.equals(securityDb.getUserLogin()) || (securityDb.getUserRole() == Role.ADMIN)) {
+                if (!(securityDb.getUserLogin().equals(securityChangeRequest.getLogin())) && !(securityChangeRequest.getLogin() == null)) {
+                    securityDb.setUserLogin(securityChangeRequest.getLogin());
+                }
+                if (!(securityDb.getUserPassword().equals(securityChangeRequest.getPassword())) && !(securityChangeRequest.getPassword() == null)) {
+                    securityDb.setUserPassword(passwordEncoder.encode(securityChangeRequest.getPassword()));
+                }
+                if (!(securityDb.getUserEmail().equals(securityChangeRequest.getEmail())) && !(securityChangeRequest.getEmail() == null)) {
+                    securityDb.setActive(false);
+                    securityDb.setActivationCode(UUID.randomUUID().toString());
+                    securityDb.setUserEmail(securityChangeRequest.getEmail());
+                }
+                log.info("Update security user {}", securityChangeRequest);
+                securityCredentialsRepository.saveAndFlush(securityDb);
+            } else {
+                throw new SecurityCredentialsForbiddenException();
+            }
+        }
+    }
+
+    public void activationEmail(String email) {
+        Optional<SecurityCredentials> resultOptional = securityCredentialsRepository.findByUserEmail(email);
+        if (resultOptional.isPresent()) {
+            SecurityCredentials result = resultOptional.get();
+            if (!result.isActive()) {
+                result.setActive(true);
+                securityCredentialsRepository.saveAndFlush(result);
+                if (StringUtils.hasText(result.getUserEmail())) {
+                    String message = String.format(
+                            "Hello, %s! \n" +
+                                    "Welcome to ChildrenPage. Please, visit next link: http://localhost:8080/activate/%s",
+                            result.getUserLogin(),
+                            result.getActivationCode()
+                    );
+                    log.info("Activation email {}", email);
+                    mailSender.send(result.getUserEmail(), "Activation code", message);
+                }
+            } else {
+                throw new SecurityCredentialsForbiddenException();
+            }
+        }
+    }
+
+    public boolean activationCode(String code) {
+        SecurityCredentials securityCredentials = securityCredentialsRepository.findByActivationCode(code);
+        if (securityCredentials == null) {
+            return false;
+        }
+        securityCredentials.setActivationCode(null);
+        securityCredentialsRepository.saveAndFlush(securityCredentials);
+        return true;
     }
 }

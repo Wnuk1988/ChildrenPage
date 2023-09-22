@@ -15,11 +15,12 @@ services:
 
   db:
     container_name: db
-    image: postgres
     ports:
       - "5432:5432"
+    image: postgres
     environment:
       - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ChildrenPage
     networks:
       - backend
 
