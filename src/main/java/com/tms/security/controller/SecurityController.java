@@ -83,18 +83,14 @@ public class SecurityController {
     @Operation(summary = "Getting the activation code", description = "We receive the activation code, we need to provide the code")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "We have successfully received the activation code"),
-            @ApiResponse(responseCode = "409", description = "Failed to receive activation code"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/activate/{code}")
     public ResponseEntity<HttpStatus> activationCode(@PathVariable String code) {
-        boolean isActivated = securityService.activationCode(code);
-        if (isActivated) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        securityService.activationCode(code);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 

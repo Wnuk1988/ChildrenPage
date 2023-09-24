@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MailSender {
-    private final JavaMailSender mailSender;
+public class SmtpMailSender {
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String username;
@@ -20,6 +20,6 @@ public class MailSender {
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
-        mailSender.send(mailMessage);
+        javaMailSender.send(mailMessage);
     }
 }

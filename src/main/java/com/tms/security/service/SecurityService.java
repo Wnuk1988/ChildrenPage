@@ -13,6 +13,7 @@ import com.tms.security.domain.AuthRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,15 +28,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SecurityService {
 
-//    @Value("${spring.artemis.broker-url}")
-//    private String url;
+    @Value("${spring.artemis.broker-url}")
+    private String url;
     private final PasswordEncoder passwordEncoder;
     private final SecurityCredentialsRepository securityCredentialsRepository;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final UserInfo userInfo;
     private final SecurityCredentials securityCredentials;
-    private final MailSender mailSender;
+    private final SmtpMailSender smtpMailSender;
 
     public String generateToken(AuthRequest authRequest) {
         Optional<SecurityCredentials> credentials = securityCredentialsRepository.findByUserLogin(authRequest.getLogin());
@@ -94,35 +95,34 @@ public class SecurityService {
     }
 
     public void activationEmail(String email) {
-        Optional<SecurityCredentials> resultOptional = securityCredentialsRepository.findByUserEmail(email);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<SecurityCredentials> resultOptional = securityCredentialsRepository.findByUserLogin(login);
         if (resultOptional.isPresent()) {
             SecurityCredentials result = resultOptional.get();
             if (!result.isActive()) {
-                result.setActive(true);
-                securityCredentialsRepository.saveAndFlush(result);
                 if (StringUtils.hasText(result.getUserEmail())) {
                     String message = String.format(
                             "Hello, %s! \n" +
-                                    "Welcome to ChildrenPage. Please, visit next link: http://localhost:8080/activate/%s",
+                                    "Welcome to ChildrenPage. Please, visit next link: " + url +"/activate/%s",
                             result.getUserLogin(),
                             result.getActivationCode()
                     );
                     log.info("Activation email {}", email);
-                    mailSender.send(result.getUserEmail(), "Activation code", message);
+                    smtpMailSender.send(result.getUserEmail(), "Activation code", message);
                 }
-            } else {
-                throw new SecurityCredentialsForbiddenException();
             }
+        }else {
+            throw new SecurityCredentialsForbiddenException();
         }
     }
 
-    public boolean activationCode(String code) {
+    public void activationCode(String code) {
         SecurityCredentials securityCredentials = securityCredentialsRepository.findByActivationCode(code);
         if (securityCredentials == null) {
-            return false;
+            throw new SecurityCredentialsForbiddenException();
         }
+        securityCredentials.setActive(true);
         securityCredentials.setActivationCode(null);
         securityCredentialsRepository.saveAndFlush(securityCredentials);
-        return true;
     }
 }
