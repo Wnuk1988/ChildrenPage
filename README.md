@@ -105,7 +105,52 @@ There are 2 users in the database with different roles:
 + "http://localhost:8080/file/genres/{genres}" – We get a description of files by genre.  
   Example:( **GET** method: "http://localhost:8080/file/genres/FAIRY_TALES" )  
 
-
 ## Admin capabilities
 ### Has access to all functions of the service, in addition to those available to the user (see above), and can additionally:  
+**IMPORTANT**: When creating a *file*, make sure that the original file name in the <u>data</u> folder matches the “path_to_file” column in the file description and is **unique**!  
++ "http://localhost:8080/user" – We receive information about all users.  
+  Example:( **GET** method: "http://localhost:8080/user" )  
++ "http://localhost:8080/user" – Adding a user.  
+  We have to pass <u>json</u> format (**POST** method:  
+  `{
+  "firstName": "firstName",
+  "lastName": "lastName",
+  "dateOfBirth": "dateOfBirth"
+  }`)  
+  Example:( **POST** method: "http://localhost:8080/user" )  
++ "http://localhost:8080/file" – Adding a file.  
+  We have to pass <u>form-data</u> (**POST** method:  
+  `"Key": file,
+  "Value": value`)  
+  Example:( **POST** method: "http://localhost:8080/file" )  
++ "http://localhost:8080/file/description" – Adding a file description.  
+  We have to pass <u>json</u> format (**POST** method:  
+  `{
+  "nameFile": "nameFile",
+  "descriptionFile": "descriptionFile",
+  "pathToFile": "pathToFile",
+  "categories": "categories",
+  "genres": "genres"
+  }`)  
+  Example:( **POST** method: "http://localhost:8080/file/description" )  
++ "http://localhost:8080/file" – Changing the file description.  
+  We have to pass <u>json</u> format (**PUT** method:  
+  `{ 
+  "id":id,
+  "nameFile": "nameFile",
+  "descriptionFile": "descriptionFile",
+  "pathToFile": "pathToFile",
+  "categories": "categories",
+  "genres": "genres"
+  }`)  
+  Example:( **PUT** method: "http://localhost:8080/file" )  
++ "http://localhost:8080/file" – Deleting the entire file.  
+  We have to pass <u>json</u> format (**DELETE** method:  
+  `{
+  "fileId": fileId,
+  "fileName": "fileName"
+  }`)  
+  Example:( **DELETE** method: "http://localhost:8080/file" )  
+
+## Additional features  
 
