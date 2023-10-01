@@ -16,7 +16,7 @@ The project is connected to the <u>ChildrenPage</u> in-memory database. Contains
 + *security_credentials* – stores data about login, password (in encrypted form), user data for identification.  
 
 
-To run a project using the open **Docker** platform, you need to configure the <u>application.properties</u> file. Change the value of the lines:  
+To create a project image on the open platform **Docker**, you need to configure the <u>application.properties</u> file. Change the value of the lines:  
 + spring.jpa.hibernate.ddl-auto=update on create;  
 + spring.datasource.url=jdbc:postgresql://localhost:5432/ChildrenPage on jdbc:postgresql://${DB_HOST}/ChildrenPage
 
@@ -47,7 +47,7 @@ There are 2 users in the database with different roles:
 ## User capabilities
 ### Available endpoints:
 + "http://localhost:8080/user/{id}" – Getting information about the user.  
-  Example:( **GET** method: "http://localhost:8080/user/1" )  
+  Example:( **GET** method: "http://localhost:8080/user/1" )
 + "http://localhost:8080/update" – Changing Security data.  
   We have to pass <u>json</u> format (**PUT** method:  
   `{
@@ -143,14 +143,20 @@ There are 2 users in the database with different roles:
   "categories": "categories",
   "genres": "genres"
   }`)  
-  Example:( **PUT** method: "http://localhost:8080/file" )  
+  Example:( **PUT** method: "http://localhost:8080/file" )
 + "http://localhost:8080/file" – Deleting the entire file.  
   We have to pass <u>json</u> format (**DELETE** method:  
   `{
   "fileId": fileId,
   "fileName": "fileName"
-  }`)  
+  }`)
   Example:( **DELETE** method: "http://localhost:8080/file" )  
 
 ## Additional features  
-
+1. The ***Swagger*** framework is connected, for a better opportunity
+   not only view the specification interactively, but also submit requests.  
+   To use it, just go to the URL "http://localhost:8080/swagger-ui/index.html#/".  
+2. ***Flyway*** is a database migration tool open source data.  
+3. ***Docker*** is an open platform for developing, delivering, and operating applications.  
+   To use it, you need to download the following *images* from a remote repository with docker images and run it:  
+   **docker pull wnuk1988/childrenpage:v2**
