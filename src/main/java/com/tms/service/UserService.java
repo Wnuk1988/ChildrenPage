@@ -35,7 +35,7 @@ public class UserService {
             if (id.equals(securityCredentials.getUserId()) || (securityCredentials.getUserRole() == Role.ADMIN)) {
                 return userRepository.findById(id);
             }else {
-                throw new UserInfoNotFoundException();
+                throw new SecurityCredentialsForbiddenException();
             }
         }
         return Optional.empty();

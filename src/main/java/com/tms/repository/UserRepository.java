@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<UserInfo, Integer> {
 
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "DELETE FROM l_user_file WHERE user_info_id=:userInfoId OR description_file_id=:descriptionFileId")
+    @Query(nativeQuery = true, value = "DELETE FROM l_user_file WHERE user_info_id=:userInfoId AND description_file_id=:descriptionFileId")
     void deleteByFavoritesFile(Integer userInfoId, Integer descriptionFileId);
 }
