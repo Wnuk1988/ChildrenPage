@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,6 +47,9 @@ public class UserServiceTest {
 
     @Test
     public void getUserTest() {
+        SecurityCredentials securityCredentials = new SecurityCredentials();
+        securityCredentials.setUserLogin("Login");
+        Mockito.when(securityCredentialsRepository.findByUserLogin(anyString())).thenReturn(Optional.of(securityCredentials));
         securityCredentialsRepository.findByUserLogin("Login");
         Mockito.verify(securityCredentialsRepository, Mockito.times(1)).findByUserLogin(anyString());
         UserInfo userInfo = new UserInfo();
