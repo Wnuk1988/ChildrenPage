@@ -87,7 +87,9 @@ There are 2 users in the database with different roles:
   }`)  
   Example:( **DELETE** method: "http://localhost:8080/user/favorites" )  
 +  "http://localhost:8080/file" – We get a description of all files.  
-   Example:( **GET** method: "http://localhost:8080/file" )  
+   Example:( **GET** method: "http://localhost:8080/file" ) 
++ "http://localhost:8080/file/files" – We get a list of all files.  
+  Example:( **GET** method: "http://localhost:8080/file/files" )
 + "http://localhost:8080/file/pagination" – We get file descriptions by pagination.  
   We have to pass <u>json</u> format (**GET** method:  
   `{
