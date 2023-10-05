@@ -32,13 +32,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,6 +65,27 @@ public class DescriptionFileController {
         } else {
             return new ResponseEntity<>(fileList, HttpStatus.OK);
         }
+    }
+
+    @Operation(summary = "We get a list of all files")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful request to get a list of files"),
+            @ApiResponse(responseCode = "400", description = "A syntax error was detected in the client's request"),
+            @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
+            @ApiResponse(responseCode = "500", description = "Server error"),
+    })
+    @GetMapping("/files")
+    public ResponseEntity<ArrayList<String>> getFiles() {
+        try {
+            ArrayList<String> filenames = (ArrayList<String>) Files.walk(this.ROOT_FILE_PATH, 1)
+                    .filter(path -> !path.equals(this.ROOT_FILE_PATH))
+                    .map(Path::toString)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(filenames, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
     }
 
     @Operation(summary = "We get file descriptions by pagination", description = "We receive file descriptions by pagination, we need to pass json RequestPagination to the input")
