@@ -161,4 +161,5 @@ There are 2 users in the database with different roles:
 2. ***Flyway*** is a database migration tool open source data.  
 3. ***Docker*** is an open platform for developing, delivering, and operating applications.  
    To use it, you need to download the following *images* from a remote repository with docker images and run it:  
-   **docker pull wnuk1988/childrenpage:v2**
+   **docker pull wnuk1988/childrenpage:v2**  
+4. Once a **month**, the application reminds the user about itself and offers to see what’s new.
