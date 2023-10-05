@@ -13,13 +13,13 @@ import com.tms.security.domain.AuthRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -103,7 +103,7 @@ public class SecurityService {
                 if (StringUtils.hasText(result.getUserEmail())) {
                     String message = String.format(
                             "Hello, %s! \n" +
-                                    "Welcome to ChildrenPage. Please, visit next link: " + url +"/activate/%s",
+                                    "Welcome to ChildrenPage. Please, visit next link: " + url + "/activate/%s",
                             result.getUserLogin(),
                             result.getActivationCode()
                     );
@@ -111,7 +111,7 @@ public class SecurityService {
                     smtpMailSender.send(result.getUserEmail(), "Activation code", message);
                 }
             }
-        }else {
+        } else {
             throw new SecurityCredentialsForbiddenException();
         }
     }
@@ -124,5 +124,9 @@ public class SecurityService {
         securityCredentials.setActive(true);
         securityCredentials.setActivationCode(null);
         securityCredentialsRepository.saveAndFlush(securityCredentials);
+    }
+
+    public Optional<List<SecurityCredentials>> findAllBy() {
+        return securityCredentialsRepository.findAllBy();
     }
 }
