@@ -22,19 +22,19 @@ public class ScheduleService {
 
     @Scheduled(cron = CRON_ONE_TIME_TO_MONTH)
     private void sendingMessageToUser() {
-        Optional<List<SecurityCredentials>> allUserEmailOptional = securityService.findAllBy();
-        if (allUserEmailOptional.isPresent()) {
-            List<SecurityCredentials> allUserEmail = allUserEmailOptional.get();
-            for (SecurityCredentials userEmail : allUserEmail) {
-                if (userEmail.isActive()) {
+        Optional<List<SecurityCredentials>> allSecurityCredentialsOptional = securityService.findAllBy();
+        if (allSecurityCredentialsOptional.isPresent()) {
+            List<SecurityCredentials> resultList = allSecurityCredentialsOptional.get();
+            for (SecurityCredentials user : resultList) {
+                if (user.isActive()) {
                     String message = String.format(
                             "Hello, %s! \n" +
                                     "Go to the site and find for yourself what is not new! With respect \n" +
                                     " Your ChildrenPage.",
-                            userEmail.getUserLogin()
+                            user.getUserLogin()
                     );
-                    log.info("Mailing to the use {}", userEmail);
-                    smtpMailSender.send(userEmail.getUserEmail(), "We are glad that you are with us", message);
+                    log.info("Mailing to the use {}", user);
+                    smtpMailSender.send(user.getUserEmail(), "We are glad that you are with us", message);
                 }
             }
         } else {
