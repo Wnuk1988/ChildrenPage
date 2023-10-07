@@ -7,13 +7,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Schema(description = "To display file descriptions by pagination")
-@Component
 @Data
-@NoArgsConstructor
 public class RequestPagination {
     @Min(0)
     private Integer offset;

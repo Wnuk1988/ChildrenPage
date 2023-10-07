@@ -70,7 +70,6 @@ public class DescriptionFileController {
     @Operation(summary = "We get a list of all files")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful request to get a list of files"),
-            @ApiResponse(responseCode = "400", description = "A syntax error was detected in the client's request"),
             @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
@@ -91,6 +90,7 @@ public class DescriptionFileController {
     @Operation(summary = "We get file descriptions by pagination", description = "We receive file descriptions by pagination, we need to pass json RequestPagination to the input")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful request to obtain a list of files by pagination"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
             @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
@@ -131,6 +131,7 @@ public class DescriptionFileController {
     @Operation(summary = "Getting a file description", description = "We receive a description of the file, we need to provide its id as input")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful request to get file"),
+            @ApiResponse(responseCode = "400", description = "A syntax error was detected in the client's request"),
             @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
@@ -143,6 +144,7 @@ public class DescriptionFileController {
     @Operation(summary = "We get a description of files by category", description = "We receive a description of files by category, we need to provide a category as input")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful request to receive a file by category"),
+            @ApiResponse(responseCode = "400", description = "A syntax error was detected in the client's request"),
             @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
@@ -159,6 +161,7 @@ public class DescriptionFileController {
     @Operation(summary = "We get a description of files by genre", description = "We get a description of the files by genre, you need to send the genre as input")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful request to receive a file by genre"),
+            @ApiResponse(responseCode = "400", description = "A syntax error was detected in the client's request"),
             @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
@@ -175,6 +178,7 @@ public class DescriptionFileController {
     @Operation(summary = "Adding a file", description = "We are adding a file, the file itself must be submitted as input")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Request completed successfully, a new file was created"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
             @ApiResponse(responseCode = "409", description = "The request could not be completed due to a conflicting resource access"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
@@ -217,6 +221,7 @@ public class DescriptionFileController {
     @Operation(summary = "Deleting the entire file", description = "We delete the entire file, we need to provide json RequestIdAndFilename as input")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Request processed successfully, entire file deleted"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
             @ApiResponse(responseCode = "409", description = "The request could not be completed due to a conflicting resource access"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })

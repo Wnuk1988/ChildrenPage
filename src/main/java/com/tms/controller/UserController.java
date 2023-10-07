@@ -49,6 +49,7 @@ public class UserController {
     @Operation(summary = "Getting information about the user", description = "We receive information about the user, we need to provide his id for input")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful request to obtain user data"),
+            @ApiResponse(responseCode = "400", description = "A syntax error was detected in the client's request"),
             @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
             @ApiResponse(responseCode = "404", description = "No corresponding resource was found at the specified URL"),
             @ApiResponse(responseCode = "500", description = "Server error"),
@@ -99,6 +100,7 @@ public class UserController {
     @Operation(summary = "Deleting a user", description = "We are deleting a user, we need to provide his id at the login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "400", description = "A syntax error was detected in the client's request"),
             @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })

@@ -1,7 +1,6 @@
 package com.tms.service;
 
 import com.tms.exception.SecurityCredentialsForbiddenException;
-import com.tms.exception.UserInfoNotFoundException;
 import com.tms.models.Role;
 import com.tms.models.UserInfo;
 import com.tms.repository.UserRepository;
@@ -34,7 +33,7 @@ public class UserService {
             SecurityCredentials securityCredentials = securityCredentialsOptional.get();
             if (id.equals(securityCredentials.getUserId()) || (securityCredentials.getUserRole() == Role.ADMIN)) {
                 return userRepository.findById(id);
-            }else {
+            } else {
                 throw new SecurityCredentialsForbiddenException();
             }
         }

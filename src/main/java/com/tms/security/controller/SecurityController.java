@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +29,13 @@ public class SecurityController {
     @Operation(summary = "User registration", description = "We are registering a user, we need to provide json RegistrationDTO for login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "We have successfully created a user"),
-            @ApiResponse(responseCode = "409", description = "Failed to create user"),
             @ApiResponse(responseCode = "400", description = "Client side error"),
+            @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
+            @ApiResponse(responseCode = "409", description = "Failed to create user"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
     @PostMapping("/registration")
-    public ResponseEntity<HttpStatus> registration(@RequestBody RegistrationDTO registrationDTO) {
+    public ResponseEntity<HttpStatus> registration(@Valid @RequestBody RegistrationDTO registrationDTO) {
         securityService.registration(registrationDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
