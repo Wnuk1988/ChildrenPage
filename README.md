@@ -13,7 +13,8 @@ The project is connected to the <u>ChildrenPage</u> in-memory database. Contains
 + *user_info* – stores information about users. At the time of creation there were 2 users.  
 + *description_file* – stores information about the file itself. At the time of creation it contains 5 files.  
 + *l_user_file* – stores the user's favorite files.  
-+ *security_credentials* – stores data about login, password (in encrypted form), user data for identification.  
++ *security_credentials* – stores data about login, password (in encrypted form), user data for identification. 
++ *flyway_schema_history* - is designed to store the database schema migration history.
 
 
 To create a project image on the open platform **Docker**, you need to configure the <u>application.properties</u> file. Change the value of the lines:  

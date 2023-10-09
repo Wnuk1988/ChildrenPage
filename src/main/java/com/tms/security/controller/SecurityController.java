@@ -63,7 +63,7 @@ public class SecurityController {
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping("/update")
-    public ResponseEntity<HttpStatus> updateSecurityCredentials(@RequestBody SecurityChangeRequest securityChangeRequest) {
+    public ResponseEntity<HttpStatus> updateSecurityCredentials(@Valid @RequestBody SecurityChangeRequest securityChangeRequest) {
         securityService.updateSecurityCredentials(securityChangeRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
