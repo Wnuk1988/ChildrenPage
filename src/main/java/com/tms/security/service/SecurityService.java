@@ -75,13 +75,13 @@ public class SecurityService {
         if (securityCredentialsOptional.isPresent()) {
             SecurityCredentials securityDb = securityCredentialsOptional.get();
             if (login.equals(securityDb.getUserLogin()) || (securityDb.getUserRole() == Role.ADMIN)) {
-                if (!(securityDb.getUserLogin().equals(securityChangeRequest.getLogin())) && !(securityChangeRequest.getLogin() == null)) {
+                if (!(securityDb.getUserLogin().equals(securityChangeRequest.getLogin()))) {
                     securityDb.setUserLogin(securityChangeRequest.getLogin());
                 }
-                if (!(securityDb.getUserPassword().equals(securityChangeRequest.getPassword())) && !(securityChangeRequest.getPassword() == null)) {
+                if (!(securityDb.getUserPassword().equals(securityChangeRequest.getPassword()))) {
                     securityDb.setUserPassword(passwordEncoder.encode(securityChangeRequest.getPassword()));
                 }
-                if (!(securityDb.getUserEmail().equals(securityChangeRequest.getEmail())) && !(securityChangeRequest.getEmail() == null)) {
+                if (!(securityDb.getUserEmail().equals(securityChangeRequest.getEmail()))) {
                     securityDb.setActive(false);
                     securityDb.setActivationCode(UUID.randomUUID().toString());
                     securityDb.setUserEmail(securityChangeRequest.getEmail());
