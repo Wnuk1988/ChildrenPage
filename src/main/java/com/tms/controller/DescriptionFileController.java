@@ -182,14 +182,14 @@ public class DescriptionFileController {
             @ApiResponse(responseCode = "409", description = "The request could not be completed due to a conflicting resource access"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<HttpStatus> createFile(@RequestParam("file") MultipartFile file) {
         try {
             Path pathToFile = this.ROOT_FILE_PATH.resolve(Objects.requireNonNull(file.getOriginalFilename()));
             Files.copy(file.getInputStream(), pathToFile);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
@@ -225,7 +225,7 @@ public class DescriptionFileController {
             @ApiResponse(responseCode = "409", description = "The request could not be completed due to a conflicting resource access"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<HttpStatus> deleteAllFile(@RequestBody RequestIdAndFilename requestIdAndFilename) {
         Path path = ROOT_FILE_PATH.resolve(requestIdAndFilename.getFileName());
         File file = new File(path.toString());

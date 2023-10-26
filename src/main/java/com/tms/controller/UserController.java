@@ -104,7 +104,7 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Restriction on access to the specified resource"),
             @ApiResponse(responseCode = "500", description = "Server error"),
     })
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id) {
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
